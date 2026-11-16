@@ -1,0 +1,54 @@
+/* ============================================================
+   PAGE-SPECIFIC: About + Clients image handling
+   Kept separate so penuel.js stays focused on behaviour that
+   every page shares.
+   ============================================================ */
+
+.img-missing {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent-sand);
+  background: var(--bg-elevated);
+  border: 1px dashed rgba(201, 168, 124, 0.4);
+  border-radius: 14px;
+  line-height: 1.6;
+}
+
+/* Portrait frame on the About page */
+.about-portrait {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
+.about-portrait img {
+  width: 100%;
+  display: block;
+}
+
+/* Client logo wall */
+.logo-wall {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #f2efe9;
+  padding: 10px;
+}
+
+.logo-wall img {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+}
