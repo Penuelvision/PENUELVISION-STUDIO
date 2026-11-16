@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<!-- PENUELVISION build 20261115a -->
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0f">
+
+<title>Contact — Tell Us About Your Project | PENUELVISION STUDIOS</title>
+<meta name="description" content="Tell us about your project. AI video production, cinematic commercials, corporate films, product videos and industrial promotional content in Manitoba, Canada.">
+
+<link rel="canonical" href="https://penuelvision.com/contact.html">
+
+<!-- Google reCAPTCHA v3 — invisible, scores the submission server-side.
+     The token is requested on submit, not on page load, so it never
+     expires while the visitor is filling the form. -->
+<script src="https://www.google.com/recaptcha/api.js?render=6Lce1QIuAAAAAL3kGOYCuWf7_kIY1GQCxsvmiZre" async defer></script>
+
+<link rel="preload" href="assets/fonts/montserrat-bold.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Favicon: the mark from Logo-PVS-100x100.jpg.
+     .ico for legacy browsers, PNG for modern ones, apple-touch for iOS. -->
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/images/favicon-192.png">
+<link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/penuel.css?v=20261115a">
+<link rel="stylesheet" href="assets/pages.css?v=20261115a">
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="header-logo">PENUELVISION STUDIOS</a>
+  <nav class="header-nav" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <div class="nav-item">
+      <a href="portfolio.html">Portfolio<span class="nav-caret" aria-hidden="true"></span></a>
+      <div class="nav-sub">
+        <a href="portfolio.html">Video Production</a>
+        <a href="photo-portfolio.html">Photo Production</a>
+      </div>
+    </div>
+    <!-- Shown only on mobile: the dropdown is replaced by a direct link -->
+    <a href="photo-portfolio.html" class="nav-mobile-only">Photos</a>
+    <a href="services.html">Services</a>
+    <a href="about.html">About</a>
+    <a href="clients.html">Clients</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="page-main">
+
+  <section class="section">
+    <div class="section-head">
+      <p class="eyebrow">Get in touch</p>
+      <h1 class="section-title">Tell Us About Your Project</h1>
+      <p class="section-sub">
+        Ready to bring your vision to life? Share the details and we'll talk about your next production.
+      </p>
+    </div>
+
+    <div class="contact-layout">
+
+      <div class="form-card">
+        <!-- On the live site, post this to /send-mail.php on your hosting.
+             See the note in assets/penuel.js for where the request goes. -->
+        <form id="contact-form" novalidate>
+
+          <!-- Honeypot: invisible to people, filled by bots -->
+          <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true">
+            <label for="field-website">Website</label>
+            <input type="text" id="field-website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="field-name">Name <span class="req">*</span></label>
+            <input type="text" id="field-name" name="name" class="input"
+              placeholder="Your full name" autocomplete="name" required>
+            <p class="form-error" id="err-name">Please enter your name.</p>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="field-email">Email <span class="req">*</span></label>
+              <input type="email" id="field-email" name="email" class="input"
+                placeholder="your@email.com" autocomplete="email" required>
+              <p class="form-error" id="err-email">Please enter a valid email address.</p>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="field-phone">Phone</label>
+              <input type="tel" id="field-phone" name="phone" class="input"
+                placeholder="+1 (555) 000-0000" autocomplete="tel">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="field-type">Project Type <span class="req">*</span></label>
+            <select id="field-type" name="project_type" class="select" required>
+              <option value="">Select project type…</option>
+              <option value="commercial-brand">Commercial/Brand Video</option>
+              <option value="social-media-ads">Social Media Video Ads</option>
+              <option value="automotive">Automotive &amp; Dealerships</option>
+              <option value="manufacturing">Manufacturing &amp; Industrial</option>
+              <option value="real-estate">Real Estate Video/Photo</option>
+              <option value="post-production">Post-Production Services</option>
+              <option value="motion-graphics">Motion Graphics &amp; Infographics</option>
+              <option value="music-video">Music Video Production</option>
+              <option value="animation">2D or 3D Animation</option>
+              <option value="other">Other/Not Sure Yet</option>
+            </select>
+            <p class="form-error" id="err-type">Please select a project type.</p>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="field-message">
+              Tell Us About Your Project <span class="req">*</span>
+            </label>
+            <textarea id="field-message" name="message" class="textarea" required
+              placeholder="Share your vision, goals, timeline, or any specific requirements…"></textarea>
+            <p class="form-error" id="err-message">Please describe your project.</p>
+          </div>
+
+          <div class="field">
+            <div class="check-row">
+              <input type="checkbox" id="field-privacy" name="privacy" required>
+              <label class="check-label" for="field-privacy">
+                I agree to the <a href="privacy.html">Privacy Policy</a> and consent to be
+                contacted about my project.
+              </label>
+            </div>
+            <p class="form-error" id="err-privacy">Please accept the privacy policy.</p>
+          </div>
+
+          <!-- Filled by reCAPTCHA v3 on submit; no visible widget -->
+          <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response" value="">
+          <p class="form-error" id="err-captcha">Robot check did not pass. Please try again.</p>
+
+          <div class="form-error-banner" id="form-error-banner" role="alert"
+            style="display:none;margin-bottom:16px;padding:13px 16px;border-radius:9px;
+                   background:rgba(224,122,95,.12);border:1px solid rgba(224,122,95,.35);
+                   color:#ffb3a0;font-size:.86rem;line-height:1.5"></div>
+
+          <button type="submit" class="form-submit">Send Message</button>
+
+          <div class="form-success" id="form-success" role="status">
+            Thank you! Your message has been sent. We'll get back to you within 24 hours.
+          </div>
+
+        </form>
+      </div>
+
+      <aside class="info-card">
+        <h3>Get In Touch</h3>
+
+        <div class="info-item">
+          <div class="info-label">Email</div>
+          <div class="info-value">
+            <a href="mailto:aivisuals@penuelvision.com">aivisuals@penuelvision.com</a>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Phone</div>
+          <div class="info-value">
+            <a href="tel:+14313885053">+1 431 388 50 53</a>
+          </div>
+          <div class="info-note">(WhatsApp, Viber)</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Location</div>
+          <div class="info-value">
+            Manitoba, Canada<br>
+            Serving Clients Worldwide
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Follow</div>
+          <div class="social-row">
+            <a href="https://www.linkedin.com/in/aleхpv" class="social-btn" aria-label="LinkedIn" title="LinkedIn"
+              target="_blank" rel="noopener noreferrer">in</a>
+            <a href="https://www.youtube.com/@penuelvision" class="social-btn" aria-label="YouTube" title="YouTube"
+              target="_blank" rel="noopener noreferrer">&#9654;</a>
+            <a href="https://www.instagram.com/penuelvision/" class="social-btn" aria-label="Instagram" title="Instagram"
+              target="_blank" rel="noopener noreferrer">&#9678;</a>
+            <a href="https://www.facebook.com/penuelvision" class="social-btn" aria-label="Facebook" title="Facebook"
+              target="_blank" rel="noopener noreferrer">f</a>
+          </div>
+        </div>
+
+        <div class="response-note">
+          <div class="label">Response Time</div>
+          <div class="value">Within 24 hours</div>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+</main>
+
+<div class="video-modal" id="video-modal" role="dialog" aria-modal="true" aria-label="Video player">
+  <div class="video-modal-inner">
+    <button type="button" class="video-modal-close" aria-label="Close player">&#10005;</button>
+    <div class="video-modal-frame"></div>
+    <div class="video-caption" style="margin-top:14px">
+      <h3 class="modal-title"></h3>
+      <p class="modal-desc"></p>
+    </div>
+  </div>
+</div>
+
+<a href="https://portal.penuelvision.com/" class="portal-peek" title="Client Portal" aria-label="Client Portal login">&#128274;</a>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">PENUELVISION STUDIOS</div>
+      <p class="footer-text">
+        Cinematic Video Production &amp; AI Content Creation.<br>
+        Based in Manitoba, Canada — serving clients everywhere.
+      </p>
+    </div>
+    <div>
+      <div class="footer-heading">Navigate</div>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="portfolio.html">Portfolio</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="clients.html">Clients</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Get In Touch</div>
+      <ul class="footer-links">
+        <li><a href="mailto:aivisuals@penuelvision.com">aivisuals@penuelvision.com</a></li>
+        <li><a href="tel:+14313885053">+1 431 388 50 53</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    Copyright &copy; <span data-current-year>2026</span> PENUELVISION STUDIOS. All Rights Reserved.
+  </div>
+</footer>
+
+<script src="assets/penuel.js?v=20261115a"></script>
+</body>
+</html>

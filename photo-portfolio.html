@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!-- PENUELVISION build 20261115a -->
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0f">
+
+<title>Photo Production Portfolio — PENUELVISION STUDIOS</title>
+<meta name="description" content="Photography portfolio: AI photography, real estate, manufacturing, events and commercial work produced by PENUELVISION STUDIOS in Manitoba, Canada.">
+<meta name="keywords" content="AI photography, real estate photography, commercial photography Manitoba, event photography, product photography, architectural photography">
+
+<link rel="canonical" href="https://penuelvision.com/photo-portfolio.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Photo Production Portfolio — PENUELVISION STUDIOS">
+<meta property="og:description" content="AI photography, real estate, manufacturing, events and commercial photography.">
+<meta property="og:image" content="https://penuelvision.com/assets/images/About.jpg">
+
+<link rel="preload" href="assets/fonts/montserrat-bold.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Favicon: the mark from Logo-PVS-100x100.jpg.
+     .ico for legacy browsers, PNG for modern ones, apple-touch for iOS. -->
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/images/favicon-192.png">
+<link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/penuel.css?v=20261115a">
+<link rel="stylesheet" href="assets/pages.css?v=20261115a">
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="header-logo">PENUELVISION STUDIOS</a>
+  <nav class="header-nav" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <div class="nav-item">
+      <a href="portfolio.html">Portfolio<span class="nav-caret" aria-hidden="true"></span></a>
+      <div class="nav-sub">
+        <a href="portfolio.html">Video Production</a>
+        <a href="photo-portfolio.html">Photo Production</a>
+      </div>
+    </div>
+    <!-- Shown only on mobile: the dropdown is replaced by a direct link -->
+    <a href="photo-portfolio.html" class="nav-mobile-only">Photos</a>
+    <a href="services.html">Services</a>
+    <a href="about.html">About</a>
+    <a href="clients.html">Clients</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="page-main">
+
+  <section class="section section-tight">
+    <div class="section-head">
+      <p class="eyebrow">Selected work</p>
+      <h1 class="section-title">Photo Production</h1>
+      <p class="section-sub">
+        AI photography, real estate, manufacturing, events and commercial work.
+        Click any image to view it full size.
+      </p>
+    </div>
+
+    <div class="filters photo-filters" role="tablist" aria-label="Filter photos by category">
+      <button type="button" class="filter-btn is-active" data-filter="all" role="tab" aria-selected="true">All</button>
+      <button type="button" class="filter-btn" data-filter="ai-photo" role="tab" aria-selected="false">AI Photo</button>
+      <button type="button" class="filter-btn" data-filter="real-estate" role="tab" aria-selected="false">Real Estate</button>
+      <button type="button" class="filter-btn" data-filter="manufacturing" role="tab" aria-selected="false">Manufacturing</button>
+      <button type="button" class="filter-btn" data-filter="events" role="tab" aria-selected="false">Events / Performances</button>
+      <button type="button" class="filter-btn" data-filter="commercial" role="tab" aria-selected="false">Commercial</button>
+      <button type="button" class="filter-btn" data-filter="conferences" role="tab" aria-selected="false">Conferences / Launches</button>
+    </div>
+
+    <!-- 5 categories x 30 slots, filled from assets/images/photos/ -->
+    <div class="photo-grid" id="photo-grid"></div>
+
+    <noscript>
+      <p style="text-align:center;color:#9a9aad;padding:40px 0">
+        Please enable JavaScript to view the photo portfolio.
+      </p>
+    </noscript>
+
+  </section>
+
+  <section class="section section-dark">
+    <div class="section-inner" style="text-align:center">
+      <h2 class="section-title">Need photography?</h2>
+      <p class="section-sub" style="margin-bottom:30px">
+        Property, product, architecture and event photography — with drone coverage
+        where it helps.
+      </p>
+      <a href="contact.html" class="btn btn-lg">Start a Project</a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <div class="lightbox-inner">
+    <button type="button" class="lightbox-close" aria-label="Close viewer">&#10005;</button>
+    <button type="button" class="lightbox-nav lightbox-prev" aria-label="Previous photo">&#8249;</button>
+    <button type="button" class="lightbox-nav lightbox-next" aria-label="Next photo">&#8250;</button>
+
+    <div class="lightbox-frame">
+      <img src="" alt="">
+      <div class="lightbox-caption"></div>
+    </div>
+  </div>
+</div>
+
+<div class="video-modal" id="video-modal" role="dialog" aria-modal="true" aria-label="Video player">
+  <div class="video-modal-inner">
+    <button type="button" class="video-modal-close" aria-label="Close player">&#10005;</button>
+    <div class="video-modal-frame"></div>
+    <div class="video-caption" style="margin-top:14px">
+      <h3 class="modal-title"></h3>
+      <p class="modal-desc"></p>
+    </div>
+  </div>
+</div>
+
+<a href="https://portal.penuelvision.com/" class="portal-peek" title="Client Portal" aria-label="Client Portal login">&#128274;</a>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">PENUELVISION STUDIOS</div>
+      <p class="footer-text">
+        Cinematic Video Production &amp; AI Content Creation.<br>
+        Based in Manitoba, Canada — serving clients everywhere.
+      </p>
+    </div>
+    <div>
+      <div class="footer-heading">Navigate</div>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="portfolio.html">Portfolio</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="clients.html">Clients</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Get In Touch</div>
+      <ul class="footer-links">
+        <li><a href="mailto:aivisuals@penuelvision.com">aivisuals@penuelvision.com</a></li>
+        <li><a href="tel:+14313885053">+1 431 388 50 53</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    Copyright &copy; <span data-current-year>2026</span> PENUELVISION STUDIOS. All Rights Reserved.
+  </div>
+</footer>
+
+<script src="assets/penuel.js?v=20261115a"></script>
+</body>
+</html>

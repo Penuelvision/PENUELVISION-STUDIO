@@ -1,0 +1,68 @@
+# ============================================================
+#  ДОБАВИТЬ В КОНЕЦ ВАШЕГО .htaccess
+# ============================================================
+#
+#  Зачем: файлы шрифтов отдаются без Cache-Control, поэтому браузер
+#  перепроверяет их заметно чаще, чем нужно. Шрифты меняются только
+#  вместе с переименованием файла, так что их можно кэшировать на год
+#  и пометить immutable — тогда браузер даже не станет переспрашивать.
+#
+#  Если в вашем .htaccess уже есть блок <IfModule mod_expires.c>,
+#  продублируйте строки ExpiresByType из первой секции туда,
+#  а вторую секцию добавьте целиком.
+#
+# ------------------------------------------------------------
+
+# 1. Сроки хранения
+
+<IfModule mod_expires.c>
+  ExpiresByType font/woff2                     "access plus 1 year"
+  ExpiresByType font/woff                      "access plus 1 year"
+  ExpiresByType font/ttf                       "access plus 1 year"
+  ExpiresByType font/otf                       "access plus 1 year"
+  ExpiresByType application/font-woff          "access plus 1 year"
+  ExpiresByType application/font-woff2         "access plus 1 year"
+  ExpiresByType application/x-font-ttf         "access plus 1 year"
+  ExpiresByType application/vnd.ms-fontobject  "access plus 1 year"
+</IfModule>
+
+# 2. Заголовок immutable
+#
+#    Если когда-нибудь замените файл шрифта, не меняя имя,
+#    браузеры продолжат показывать старый. Поэтому при замене
+#    переименовывайте файл или правьте это правило.
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(woff2|woff|ttf|otf|eot)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+# 3. Правильный MIME для WOFF2
+#
+#    Некоторые конфигурации Apache отдают .woff2 как
+#    application/octet-stream. Браузеры это переживают, но
+#    корректный тип надёжнее.
+
+<IfModule mod_mime.c>
+  AddType font/woff2  .woff2
+  AddType font/woff   .woff
+  AddType font/ttf    .ttf
+  AddType font/otf    .otf
+</IfModule>
+
+# ============================================================
+#  ПРОВЕРКА ПОСЛЕ УСТАНОВКИ
+# ============================================================
+#
+#    curl -I https://www.ai.penuelvision.com/assets/fonts/inter-regular.woff2
+#
+#  В ответе должно появиться:
+#
+#    cache-control: public, max-age=31536000, immutable
+#    content-type: font/woff2
+#
+#  Если cache-control отсутствует — на сервере не включён mod_headers.
+#  Напишите в поддержку хостинга: «включите, пожалуйста, модули
+#  mod_headers и mod_expires».
+# ============================================================

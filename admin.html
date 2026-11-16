@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>PENUELVISION — панель управления портфолио</title>
+<style>
+  :root{
+    --bg:#0b0b10; --bg2:#12121a; --bg3:#171722; --bg4:#1d1d2a;
+    --border:#28283a; --text:#e8e8ef; --muted:#8a8a9e;
+    --beige:#c9a87c; --sand:#e0c9a6; --ok:#6fcf97; --bad:#eb5757;
+    --font:'Montserrat',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);
+    font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--beige)}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;
+    background:var(--bg4);padding:1px 5px;border-radius:4px;color:var(--sand)}
+  header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:16px;
+    padding:14px 24px;background:rgba(11,11,16,.94);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border)}
+  .brand{font-weight:700;letter-spacing:2px;font-size:.9rem}
+  .brand small{display:block;font-weight:400;letter-spacing:.6px;color:var(--muted);
+    font-size:.7rem;margin-top:2px}
+  .hdr-info{margin-left:auto;color:var(--muted);font-size:.8rem}
+  main{max-width:1120px;margin:0 auto;padding:26px 24px 80px}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
+  .tab{background:var(--bg3);border:1px solid var(--border);color:var(--muted);
+    padding:9px 16px;border-radius:8px;cursor:pointer;font-family:var(--font);
+    font-size:.82rem;font-weight:600;transition:.2s}
+  .tab:hover{border-color:#3a3a52;color:var(--text)}
+  .tab.on{background:var(--beige);border-color:var(--beige);color:#1a1408}
+  .tab span{opacity:.65;margin-left:4px}
+  .hidden{display:none!important}
+  .btn{background:var(--bg3);border:1px solid var(--border);color:var(--text);
+    padding:10px 18px;border-radius:8px;cursor:pointer;font-family:var(--font);
+    font-size:.82rem;font-weight:600;transition:.2s;white-space:nowrap}
+  .btn:hover:not(:disabled){border-color:var(--beige);color:var(--sand)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn-primary{background:var(--beige);border-color:var(--beige);color:#1a1408}
+  .btn-primary:hover:not(:disabled){background:var(--sand);border-color:var(--sand);color:#1a1408}
+  .btn-danger{border-color:#4a2530;color:#e08a97}
+  .btn-danger:hover:not(:disabled){background:#2a1620;border-color:var(--bad);color:#ff9aa8}
+  .btn-sm{padding:6px 12px;font-size:.76rem}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .hint{color:var(--muted);font-size:.82rem;margin:0 0 14px}
+  .sub{color:var(--muted);font-size:.76rem}
+  .ok{color:var(--ok)}
+  .bad{color:var(--bad)}
+  .report{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+    padding:16px 18px;margin-bottom:18px;font-size:.84rem}
+  .report h3{margin:0 0 10px;font-size:.82rem;letter-spacing:1.2px;
+    text-transform:uppercase;color:var(--beige)}
+  .rows{display:flex;flex-direction:column;gap:8px}
+  .row{display:grid;align-items:center;gap:12px;background:var(--bg2);
+    border:1px solid var(--border);border-radius:10px;padding:10px 14px}
+  .row:hover{border-color:#34344a}
+  .row-title{font-size:.88rem;font-weight:600}
+  .row-desc{color:var(--muted);font-size:.76rem;margin-top:2px}
+  .row-acts{display:flex;gap:6px;justify-content:flex-end}
+  .err{background:#2a1620;border:1px solid #4a2530;color:#ffb3bd;
+    padding:10px 14px;border-radius:8px;margin-top:12px;font-size:.82rem}
+  .loader{max-width:520px;margin:14vh auto;text-align:center;padding:34px 28px;
+    background:var(--bg2);border:1px solid var(--border);border-radius:16px}
+  .loader h1{font-size:1.15rem;margin:0 0 8px}
+  .loader p{color:var(--muted);font-size:.85rem;margin:0 0 22px}
+  .drop{border:2px dashed var(--border);border-radius:14px;padding:40px 24px;
+    text-align:center;cursor:pointer;transition:.2s}
+  .drop:hover,.drop.over{border-color:var(--beige);background:rgba(201,168,124,.05)}
+  .drop b{display:block;margin-bottom:6px}
+  .drop span{color:var(--muted);font-size:.8rem}
+  .addbox{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+    padding:16px 18px;margin-top:18px}
+  .addbox h3{margin:0 0 12px;font-size:.82rem;letter-spacing:1.2px;
+    text-transform:uppercase;color:var(--beige)}
+  input[type=text],input[type=number],select,textarea{
+    background:var(--bg3);border:1px solid var(--border);color:var(--text);
+    padding:10px 13px;border-radius:8px;font-family:var(--font);font-size:.85rem;width:100%}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--beige)}
+  .sitem{display:grid;grid-template-columns:56px 74px 1fr auto;gap:12px;
+    align-items:center;background:var(--bg2);border:1px solid var(--border);
+    border-radius:10px;padding:8px 12px;cursor:grab}
+  .sitem:active{cursor:grabbing}
+  .sitem.drag{opacity:.35;border-style:dashed}
+  .sitem.over{border-color:var(--beige);background:rgba(201,168,124,.07)}
+  .sitem .pos{width:52px;padding:5px 6px;text-align:center;font-size:.8rem;font-weight:600}
+  .sitem .pos::-webkit-inner-spin-button,.sitem .pos::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0}
+  .sitem img{width:74px;height:42px;object-fit:cover;border-radius:4px;
+    display:block;background:var(--bg4)}
+  .sitem .t{font-size:.84rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sitem .t small{display:block;color:var(--muted);font-size:.72rem;font-weight:400}
+  .cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+  .cat{background:var(--bg3);border:1px solid var(--border);color:var(--muted);
+    padding:8px 14px;border-radius:20px;cursor:pointer;font-family:var(--font);
+    font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:8px}
+  .cat:hover{border-color:#3a3a52}
+  .cat.on{background:rgba(201,168,124,.14);border-color:var(--beige);color:var(--sand)}
+  .cat b{font-size:.7rem;opacity:.6;font-weight:600}
+  .cbox{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;
+    border:1px solid var(--border);border-radius:20px;cursor:pointer;
+    font-size:.8rem;background:var(--bg3)}
+  .cbox.on{border-color:var(--beige);background:rgba(201,168,124,.14);color:var(--sand)}
+  .cbox input{display:none}
+  .modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.78);
+    display:flex;align-items:center;justify-content:center;padding:20px}
+  .modal.hidden{display:none}
+  .modal-inner{background:var(--bg2);border:1px solid var(--border);border-radius:16px;
+    width:100%;max-width:560px;max-height:90vh;overflow-y:auto;padding:24px}
+  .modal-inner h2{margin:0 0 18px;font-size:1.05rem}
+  .fld{margin-bottom:16px}
+  .fld label{display:block;font-size:.78rem;font-weight:600;margin-bottom:6px;color:var(--muted)}
+  #toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);
+    background:var(--beige);color:#1a1408;padding:12px 22px;border-radius:10px;
+    font-size:.84rem;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:200}
+  #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:640px){
+    .grid2{grid-template-columns:1fr}
+    .row{grid-template-columns:1fr!important}
+    .row-acts{justify-content:flex-start}
+    main{padding:18px 14px 60px}
+  }
+</style>
+</head>
+<body>
+
+<div class="loader" id="loader">
+  <h1>Панель управления портфолио</h1>
+  <p>Загрузите файл <code>videos.js</code> с сервера — панель прочитает ролики, порядок и категории.</p>
+  <input type="file" id="file" accept=".js,text/javascript" hidden>
+  <div class="drop" id="drop">
+    <b>Перетащите videos.js сюда</b>
+    <span>или нажмите, чтобы выбрать файл</span>
+  </div>
+  <div class="err hidden" id="loadErr"></div>
+</div>
+
+<div id="app" class="hidden">
+  <header>
+    <div class="brand">PENUELVISION<small>панель управления</small></div>
+    <div class="hdr-info" id="hdrInfo"></div>
+    <button class="btn btn-sm" id="btnReload">Загрузить другой файл</button>
+  </header>
+
+  <main>
+    <div class="tabs">
+      <button class="tab on" data-tab="list">Ролики <span id="nVideos"></span></button>
+      <button class="tab" data-tab="order">Порядок в категориях</button>
+      <button class="tab" data-tab="cats">Категории</button>
+      <button class="tab" data-tab="export">Выгрузить файл</button>
+    </div>
+
+    <!-- ─── вкладка: ролики ─── -->
+    <section id="tab-list">
+      <div class="bar" style="margin-bottom:16px">
+        <button class="btn btn-primary" id="btnAdd">+ Добавить ролик</button>
+      </div>
+      <div class="cats" id="cats"></div>
+      <div class="rows" id="rows"></div>
+    </section>
+
+    <!-- ─── вкладка: порядок ─── -->
+    <section id="tab-order" class="hidden">
+      <p class="hint">
+        Перетаскивайте строки мышью или впишите номер позиции в поле слева
+        и нажмите Enter. Порядок отдельный для каждой категории.
+      </p>
+      <div class="cats" id="orderCats"></div>
+      <div class="rows" id="sortlist"></div>
+    </section>
+
+    <!-- ─── вкладка: категории ─── -->
+    <section id="tab-cats" class="hidden">
+      <p class="hint">
+        Категории правятся сразу в трёх файлах: ключи в <b>videos.js</b>,
+        названия в <b>penuel.js</b>, кнопки в <b>portfolio.html</b>.
+        Привяжите файлы на вкладке «Выгрузить» — панель сделает это согласованно.
+        Перетаскивайте строки, чтобы изменить порядок кнопок на сайте.
+      </p>
+      <div class="report" id="catsStatus"></div>
+      <div class="rows" id="catRows"></div>
+      <div class="addbox">
+        <h3>Добавить категорию</h3>
+        <div class="bar" style="margin:0">
+          <input id="newCatLabel" placeholder="Название, например Sound Design" style="flex:1;min-width:200px">
+          <button class="btn btn-primary" id="btnAddCat">Добавить</button>
+        </div>
+        <div class="sub" style="margin-top:8px">
+          Ключ создаётся автоматически из названия. Русские слова транслитерируются.
+        </div>
+        <div class="err hidden" id="catErr"></div>
+      </div>
+    </section>
+
+    <!-- ─── вкладка: выгрузка ─── -->
+    <section id="tab-export" class="hidden">
+      <div class="report" id="report"></div>
+
+      <div class="report">
+        <h3>HTML-файлы сайта</h3>
+        <p class="hint" style="margin-bottom:14px">
+          Привяжите все страницы — панель подставит в них один и тот же номер версии.
+          Без этого браузеры год держат старый CSS и JS из кэша.
+        </p>
+        <div id="versionAudit" class="hidden"></div>
+        <div id="htmlRows"></div>
+        <input type="file" id="htmlFile" accept=".html,text/html" multiple hidden>
+        <div class="bar" style="margin-top:14px">
+          <button class="btn" id="btnAddHtml">+ Привязать HTML-файлы</button>
+          <button class="btn hidden" id="btnBumpAll">Поднять версию везде</button>
+          <button class="btn btn-primary hidden" id="btnDownloadHtml">Скачать обновлённые HTML</button>
+        </div>
+        <div class="err hidden" id="htmlErr"></div>
+      </div>
+
+      <div class="report">
+        <h3>Обложки на YouTube</h3>
+        <p class="hint" style="margin-bottom:14px">
+          В <b>penuel.js</b> есть номер, который заставляет браузер скачать обложки заново.
+          Привяжите файл и поднимите номер, когда поменяете обложку на YouTube.
+        </p>
+        <div id="jsRows"></div>
+        <input type="file" id="jsFile" accept=".js,text/javascript" multiple hidden>
+        <div class="bar" style="margin-top:14px">
+          <button class="btn" id="btnAddJs">+ Привязать penuel.js</button>
+          <button class="btn hidden" id="btnBumpThumb">Поднять версию обложек</button>
+          <button class="btn btn-primary hidden" id="btnDownloadJs">Скачать penuel.js</button>
+        </div>
+        <div class="err hidden" id="jsErr"></div>
+      </div>
+
+      <div class="bar" style="margin-top:20px">
+        <button class="btn" id="btnBump">Поднять версию</button>
+        <button class="btn" id="btnBuild">Собрать файл</button>
+        <button class="btn btn-primary" id="btnDownload">Скачать videos.js</button>
+      </div>
+      <div class="err hidden" id="buildErr"></div>
+    </section>
+  </main>
+
+  <div class="modal hidden" id="modal">
+    <div class="modal-inner">
+      <h2 id="mTitle">Ролик</h2>
+      <div class="fld">
+        <label for="fId">ID на YouTube или адрес</label>
+        <input type="text" id="fId" placeholder="SevAYS-Pcdw или полная ссылка">
+      </div>
+      <div class="fld">
+        <label for="fTitle">Название</label>
+        <input type="text" id="fTitle" placeholder="Название ролика">
+      </div>
+      <div class="fld">
+        <label for="fDesc">Описание</label>
+        <textarea id="fDesc" rows="3" placeholder="Короткое описание"></textarea>
+      </div>
+      <div class="fld">
+        <label>Категории</label>
+        <div class="cats" id="fCats" style="margin:0"></div>
+      </div>
+      <div class="bar" style="margin-top:20px">
+        <button class="btn btn-primary" id="mSave">Сохранить</button>
+        <button class="btn" id="mCancel">Отмена</button>
+      </div>
+      <div class="err hidden" id="mErr"></div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Состояние
+   ═══════════════════════════════════════════════════════════════ */
+
+var S = {
+  videos: [],
+  order: {},
+  showreel: null,
+  version: '20261115a',
+  html: {},
+  js: {},
+  catLabels: {},
+  pending: { videos: false, html: false, js: false },
+  editing: null,
+  activeCat: 'all',
+  activeOrderCat: 'all',
+  pendingCats: {}
+};
+
+var CATS = [];
+
+var DEFAULT_LABELS = {
+  'ai-video': 'AI Video',
+  'commercial': 'Commercial / Brand',
+  'promotional': 'Promotional Video',
+  'automotive': 'Automotive',
+  'manufacturing': 'Manufacturing',
+  'real-estate': 'Real Estate',
+  'music-video': 'Music Video',
+  'short-film': 'AI Short Films',
+  'conferences': 'Conferences / Business Forums',
+  'exhibitions': 'Exhibitions'
+};
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s == null ? '' : s); }
+
+function toast(msg){
+  var t = $('toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  clearTimeout(t._h);
+  t._h = setTimeout(function(){ t.classList.remove('on'); }, 2400);
+}
+
+function thumb(id){ return 'https://i.ytimg.com/vi/' + id + '/mqdefault.jpg'; }
+
+function jsStr(s){
+  return String(s == null ? '' : s)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/\r?\n/g, '\\n');
+}
+
+function inCats(v){
+  return String(v.cat || '').split(' ').filter(Boolean);
+}
+
+function prettifyKey(key){
+  if (DEFAULT_LABELS[key]) return DEFAULT_LABELS[key];
+  return String(key).split('-').map(function(w){
+    if (w === 'ai') return 'AI';
+    if (!w) return '';
+    return w.charAt(0).toUpperCase() + w.slice(1);
+  }).join(' ');
+}
+
+function slugify(str){
+  return String(str)
+    .toLowerCase()
+    .replace(/[а-яё]/g, function(ch){
+      var map = {'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh',
+                 'з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o',
+                 'п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'ts',
+                 'ч':'ch','ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'};
+      return map[ch] || '';
+    })
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Категории
+   ═══════════════════════════════════════════════════════════════ */
+
+function rebuildCats(){
+  var labels = S.catLabels || {};
+  CATS = Object.keys(S.order)
+    .filter(function(k){ return k !== 'all'; })
+    .map(function(k){ return [k, labels[k] || prettifyKey(k)]; });
+}
+
+function label(key){
+  for (var i = 0; i < CATS.length; i++) if (CATS[i][0] === key) return CATS[i][1];
+  return key;
+}
+
+function catExists(key){
+  for (var i = 0; i < CATS.length; i++) if (CATS[i][0] === key) return true;
+  return false;
+}
+
+function catUsage(key){
+  return S.videos.filter(function(v){ return inCats(v).indexOf(key) !== -1; }).length;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Номер сборки: ГГГГММДД + буква
+   ═══════════════════════════════════════════════════════════════ */
+
+function todayStamp(){
+  var d = new Date();
+  function p(n){ return (n < 10 ? '0' : '') + n; }
+  return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate());
+}
+
+function incLetters(s){
+  if (!s) return 'a';
+  var a = s.split(''), i = a.length - 1;
+  while (i >= 0) {
+    if (a[i] !== 'z') {
+      a[i] = String.fromCharCode(a[i].charCodeAt(0) + 1);
+      return a.join('');
+    }
+    a[i] = 'a';
+    i--;
+  }
+  return 'a' + a.join('');
+}
+
+function nextBuild(v){
+  var today = todayStamp();
+  var m = String(v || '').match(/^(\d{8})([a-z]*)$/);
+  if (!m || m[1] !== today) return today + 'a';
+  return today + incLetters(m[2]);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Учёт невыгруженных файлов
+   ═══════════════════════════════════════════════════════════════ */
+
+function markData(){
+  S.pending.videos = true;
+}
+
+function markVersion(){
+  S.pending.videos = true;
+  if (Object.keys(S.html).length) S.pending.html = true;
+}
+
+function markCats(){
+  S.pending.videos = true;
+  if (Object.keys(S.html).length) S.pending.html = true;
+  if (Object.keys(S.js).length) S.pending.js = true;
+}
+
+function markThumb(){
+  if (Object.keys(S.js).length) S.pending.js = true;
+}
+
+function pendingList(){
+  var out = [];
+  if (S.pending.videos) out.push('videos.js');
+  if (S.pending.html) out.push('HTML');
+  if (S.pending.js) out.push('penuel.js');
+  return out;
+}
+
+function anyPending(){ return pendingList().length > 0; }
+
+/* ═══════════════════════════════════════════════════════════════
+   Чтение videos.js
+   ═══════════════════════════════════════════════════════════════ */
+
+function parseSource(text){
+  var sandbox = {};
+  var fn = new Function('window', text);
+  fn(sandbox);
+
+  if (!sandbox.PV_VIDEOS || !sandbox.PV_VIDEOS.length) {
+    throw new Error('В файле не найден массив PV_VIDEOS с роликами.');
+  }
+  if (!sandbox.PV_ORDER) {
+    throw new Error('В файле не найден блок PV_ORDER.');
+  }
+
+  var m = text.match(/build\s+([0-9a-z]+)/i);
+  return {
+    videos: sandbox.PV_VIDEOS,
+    order: sandbox.PV_ORDER,
+    showreel: sandbox.PV_SHOWREEL || null,
+    version: m ? m[1] : '20261115a'
+  };
+}
+
+function loadText(text){
+  var err = $('loadErr');
+  var d;
+
+  try {
+    d = parseSource(text);
+  } catch (e) {
+    err.textContent = 'Не удалось прочитать файл: ' + e.message;
+    err.classList.remove('hidden');
+    return;
+  }
+
+  err.classList.add('hidden');
+
+  S.videos = d.videos.map(function(v){
+    return {
+      id: v.id,
+      title: v.title || '',
+      cat: v.cat || '',
+      desc: v.desc || ''
+    };
+  });
+
+  S.order = {};
+  for (var k in d.order) {
+    if (Object.prototype.hasOwnProperty.call(d.order, k)) {
+      S.order[k] = d.order[k].slice();
+    }
+  }
+
+  S.showreel = d.showreel;
+  S.version = d.version;
+  S.pending = { videos: false, html: false, js: false };
+  S.editing = null;
+  S.activeCat = 'all';
+  S.activeOrderCat = 'all';
+
+  if (!S.order.all) S.order.all = [];
+
+  rebuildCats();
+
+  $('loader').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  $('btnReload').disabled = false;
+  $('hdrInfo').textContent = 'версия ' + S.version;
+
+  renderAll();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Отрисовка
+   ═══════════════════════════════════════════════════════════════ */
+
+function renderAll(){
+  $('nVideos').textContent = '(' + S.videos.length + ')';
+  renderFilter();
+  renderRows();
+  renderCats();
+  renderSort();
+  renderReport();
+  renderHtmlRows();
+  renderJsRows();
+  renderCatsTab();
+}
+
+function renderFilter(){
+  var box = $('cats');
+  var keys = ['all'].concat(CATS.map(function(c){ return c[0]; }));
+  var html = '';
+
+  keys.forEach(function(k){
+    var n = (S.order[k] || []).length;
+    var name = k === 'all' ? 'Все (All)' : label(k);
+    html += '<button class="cat' + (k === S.activeCat ? ' on' : '') + '" data-cat="' + k + '">' +
+      '<span>' + esc(name) + '</span><b>' + n + '</b></button>';
+  });
+
+  box.innerHTML = html;
+}
+
+function renderRows(){
+  var box = $('rows');
+  var ids = S.order[S.activeCat] || [];
+  var byId = {};
+  S.videos.forEach(function(v){ byId[v.id] = v; });
+
+  if (!ids.length) {
+    box.innerHTML = '<p class="hint">В этой категории пока нет роликов.</p>';
+    return;
+  }
+
+  box.innerHTML = ids.map(function(id){
+    var v = byId[id];
+    if (!v) {
+      return '<div class="row" style="grid-template-columns:1fr auto">' +
+        '<div class="row-main"><div class="row-title">' + esc(id) + '</div>' +
+        '<div class="row-desc"><span class="bad">ролик не найден в PV_VIDEOS</span></div></div></div>';
+    }
+
+    var tags = inCats(v).map(function(c){
+      return '<span class="cbox on" style="padding:2px 9px;font-size:.7rem">' + esc(label(c)) + '</span>';
+    }).join(' ');
+
+    return '<div class="row" style="grid-template-columns:74px 1fr auto">' +
+      '<img src="' + thumb(v.id) + '" alt="" loading="lazy" ' +
+        'style="width:74px;height:42px;object-fit:cover;border-radius:4px;background:var(--bg4)">' +
+      '<div class="row-main">' +
+        '<div class="row-title">' + esc(v.title) + '</div>' +
+        '<div class="row-desc">' + esc(v.id) + ' · ' + esc(v.desc.slice(0, 70)) + '</div>' +
+        '<div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">' + tags + '</div>' +
+      '</div>' +
+      '<div class="row-acts">' +
+        '<button class="btn btn-sm" data-act="edit" data-id="' + esc(v.id) + '">Изменить</button>' +
+        '<button class="btn btn-sm btn-danger" data-act="del" data-id="' + esc(v.id) + '">Удалить</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderCats(){
+  var box = $('orderCats');
+  if (!box) return;
+  var keys = ['all'].concat(CATS.map(function(c){ return c[0]; }));
+  box.innerHTML = keys.map(function(k){
+    var n = (S.order[k] || []).length;
+    var name = k === 'all' ? 'Все (All)' : label(k);
+    return '<button class="cat' + (k === S.activeOrderCat ? ' on' : '') + '" data-ocat="' + k + '">' +
+      '<span>' + esc(name) + '</span><b>' + n + '</b></button>';
+  }).join('');
+}
+
+function renderSort(){
+  var box = $('sortlist');
+  if (!box) return;
+
+  var ids = S.order[S.activeOrderCat] || [];
+  var byId = {};
+  S.videos.forEach(function(v){ byId[v.id] = v; });
+
+  if (!ids.length) {
+    box.innerHTML = '<p class="hint">Пусто.</p>';
+    return;
+  }
+
+  box.innerHTML = ids.map(function(id, i){
+    var v = byId[id];
+    if (!v) return '';
+    return '<div class="sitem" draggable="true" data-id="' + esc(id) + '">' +
+      '<input class="pos" type="number" min="1" max="' + ids.length + '" value="' + (i + 1) + '" ' +
+        'title="Перенести на позицию" aria-label="Позиция">' +
+      '<img src="' + thumb(v.id) + '" alt="" loading="lazy">' +
+      '<div class="t">' + esc(v.title) + '<small>' + esc(id) + '</small></div>' +
+      '</div>';
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Проверка данных
+   ═══════════════════════════════════════════════════════════════ */
+
+function validate(){
+  var problems = [];
+  var seen = {};
+
+  S.videos.forEach(function(v){
+    if (!v.id) { problems.push('У ролика «' + v.title + '» нет ID.'); return; }
+
+    if (seen[v.id]) {
+      problems.push('Ролик «' + v.title + '» повторяется — один и тот же ID дважды.');
+    }
+    seen[v.id] = true;
+
+    if (!inCats(v).length) {
+      problems.push('У ролика «' + v.title + '» не выбрана ни одна категория.');
+    }
+
+    inCats(v).forEach(function(c){
+      if (!Object.prototype.hasOwnProperty.call(S.order, c)) {
+        problems.push('Ролик «' + v.title + '» ссылается на несуществующую категорию «' + c + '».');
+      }
+    });
+  });
+
+  Object.keys(S.order).forEach(function(k){
+    (S.order[k] || []).forEach(function(id){
+      if (!seen[id]) {
+        problems.push('В списке порядка категории «' + label(k) + '» есть лишний ID ' + id + '.');
+      }
+    });
+  });
+
+  return problems;
+}
+
+function renderReport(){
+  var problems = validate();
+  var html = '<h3>Состояние</h3>';
+
+  html += '<div>Роликов: <b>' + S.videos.length + '</b>' +
+    ' · Версия: <b>' + esc(S.version) + '</b>' +
+    (anyPending()
+      ? ' · <span class="bad">не выгружено: ' + esc(pendingList().join(', ')) + '</span>'
+      : ' · <span class="ok">всё выгружено</span>') + '</div>';
+
+  if (problems.length) {
+    html += '<div style="margin-top:10px" class="bad"><b>Есть проблемы:</b><br>' +
+      problems.slice(0, 5).map(esc).join('<br>') + '</div>';
+  } else {
+    html += '<div style="margin-top:8px" class="ok">✓ Данные согласованы, файл можно собирать</div>';
+  }
+
+  $('report').innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Сборка videos.js
+   ═══════════════════════════════════════════════════════════════ */
+
+function buildFile(){
+  var out = [];
+
+  out.push('/* PENUELVISION build ' + S.version + ' */');
+  out.push('/* Сгенерировано панелью управления портфолио. */');
+  out.push('');
+  out.push('window.PV_VIDEOS = [');
+
+  S.videos.forEach(function(v){
+    out.push('  {');
+    out.push("    id: '" + jsStr(v.id) + "',");
+    out.push("    title: '" + jsStr(v.title) + "',");
+    out.push("    cat: '" + jsStr(v.cat) + "',");
+    out.push("    desc: '" + jsStr(v.desc) + "'");
+    out.push('  },');
+  });
+
+  out.push('];');
+  out.push('');
+
+  if (S.showreel) {
+    out.push('window.PV_SHOWREEL = {');
+    out.push("  id: '" + jsStr(S.showreel.id) + "',");
+    out.push("  title: '" + jsStr(S.showreel.title || '') + "',");
+    out.push("  desc: '" + jsStr(S.showreel.desc || '') + "'");
+    out.push('};');
+    out.push('');
+  }
+
+  out.push('window.PV_ORDER = {');
+
+  var keys = ['all'].concat(CATS.map(function(c){ return c[0]; }));
+  keys.forEach(function(k){
+    out.push("  '" + k + "': [");
+    (S.order[k] || []).forEach(function(id){
+      out.push("    '" + jsStr(id) + "',");
+    });
+    out.push('  ],');
+  });
+
+  out.push('};');
+  out.push('');
+
+  return out.join('\n');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HTML: версии и кнопки фильтров
+   ═══════════════════════════════════════════════════════════════ */
+
+function detectVersion(html){
+  var m = String(html).match(/PENUELVISION build ([0-9a-z]+)/i);
+  if (m) return m[1];
+  m = String(html).match(/\?v=([0-9a-z]+)/);
+  return m ? m[1] : null;
+}
+
+function rewriteHtml(html, version){
+  var count = 0;
+
+  var out = String(html).replace(/\?v=[0-9a-z]+/g, function(){
+    count++;
+    return '?v=' + version;
+  });
+
+  out = out.replace(/PENUELVISION build [0-9a-z]+/gi, 'PENUELVISION build ' + version);
+
+  return { html: out, count: count };
+}
+
+function writeFilterButtons(html){
+  var m = html.match(/<div class="filters"[\s\S]*?<\/div>/);
+  if (!m) return { html: html, ok: false };
+
+  var out = ['    <div class="filters" role="tablist" aria-label="Filter projects by category">'];
+  out.push('      <button type="button" class="filter-btn is-active" data-filter="all" role="tab" aria-selected="true">All</button>');
+
+  CATS.forEach(function(c){
+    out.push('      <button type="button" class="filter-btn" data-filter="' + esc(c[0]) +
+             '" role="tab" aria-selected="false">' + esc(c[1]) + '</button>');
+  });
+
+  out.push('    </div>');
+
+  return { html: html.replace(m[0], out.join('\n')), ok: true };
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   penuel.js: CAT_LABELS и THUMB_VERSION
+   ═══════════════════════════════════════════════════════════════ */
+
+function readCatLabels(text){
+  var m = text.match(/var CAT_LABELS = \{([\s\S]*?)\};/);
+  if (!m) return null;
+
+  var out = {};
+  var re = /'([^']+)'\s*:\s*'((?:\\.|[^'\\])*)'/g;
+  var hit;
+  while ((hit = re.exec(m[1])) !== null) {
+    out[hit[1]] = hit[2].replace(/\\'/g, "'");
+  }
+  return out;
+}
+
+function writeCatLabels(text, order){
+  var m = text.match(/var CAT_LABELS = \{[\s\S]*?\};/);
+  if (!m) return null;
+
+  var lines = ['  var CAT_LABELS = {'];
+  order.forEach(function(key, i){
+    var lab = (S.catLabels[key] || prettifyKey(key))
+      .replace(/\\/g, '\\\\')
+      .replace(/'/g, "\\'");
+    var comma = i === order.length - 1 ? '' : ',';
+    lines.push("    '" + key + "': '" + lab + "'" + comma);
+  });
+  lines.push('  };');
+
+  return text.replace(m[0], lines.join('\n'));
+}
+
+function detectThumb(text){
+  var m = text.match(/THUMB_VERSION\s*=\s*'([0-9a-z]+)'/i);
+  return m ? m[1] : null;
+}
+
+function setThumb(text, v){
+  return text.replace(/(THUMB_VERSION\s*=\s*')([0-9a-z]+)(')/gi,
+    function(m, a, old, b){ return a + v + b; });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Выгрузка: строки файлов и аудит версий
+   ═══════════════════════════════════════════════════════════════ */
+
+function renderHtmlRows(){
+  var box = $('htmlRows');
+  var names = Object.keys(S.html);
+
+  if (!names.length) {
+    box.innerHTML = '<p class="hint">Файлы не привязаны.</p>';
+    $('btnDownloadHtml').classList.add('hidden');
+    renderVersionAudit();
+    return;
+  }
+
+  box.innerHTML = names.map(function(name){
+    var f = S.html[name];
+    var from = detectVersion(f.text) || '?';
+    var same = from === S.version;
+    return '<div class="row" style="grid-template-columns:1fr auto">' +
+      '<div class="row-main">' +
+        '<div class="row-title">' + esc(name) + '</div>' +
+        '<div class="row-desc">версия в файле: <b>' + esc(from) + '</b>' +
+          (same
+            ? ' · <span class="ok">совпадает</span>'
+            : ' → станет <b>' + esc(S.version) + '</b>') +
+        '</div>' +
+      '</div>' +
+      '<div class="row-acts"><button class="btn btn-sm btn-danger" data-hdel="' +
+        esc(name) + '">Убрать</button></div>' +
+    '</div>';
+  }).join('');
+
+  $('btnDownloadHtml').classList.remove('hidden');
+  renderVersionAudit();
+}
+
+/* Разные версии в разных HTML — не косметика. CSS и JS отдаются с
+   Cache-Control: max-age=31536000, поэтому посетитель, зашедший на
+   страницу со старым ?v=, будет год получать старый код именно там.
+   Аудит показывает расхождения, одна кнопка их выравнивает. */
+function renderVersionAudit(){
+  var box = $('versionAudit');
+  if (!box) return;
+
+  var names = Object.keys(S.html);
+  if (!names.length) { box.classList.add('hidden'); return; }
+
+  box.classList.remove('hidden');
+
+  var byVersion = {};
+  var order = [];
+
+  names.forEach(function(n){
+    var v = detectVersion(S.html[n].text) || '?';
+    if (!byVersion[v]) { byVersion[v] = []; order.push(v); }
+    byVersion[v].push(n);
+  });
+
+  var html = '<h3>Версии в привязанных файлах</h3>';
+  var uniform = order.length === 1;
+
+  if (uniform && order[0] === S.version) {
+    html += '<div class="ok">✓ Все файлы на версии ' + esc(S.version) + ' — расхождений нет</div>';
+    box.innerHTML = html;
+    $('btnBumpAll').classList.add('hidden');
+    return;
+  }
+
+  if (uniform) {
+    html += '<div class="bad">Все файлы на версии ' + esc(order[0]) +
+            ', панель на ' + esc(S.version) + '. Поднимите версию, чтобы выровнять.</div>';
+  } else {
+    html += '<div class="bad"><b>Файлы на разных версиях.</b> Кэш CSS/JS — год, ' +
+            'поэтому посетитель увидит разный код на разных страницах.</div>';
+    html += '<div style="margin-top:10px;display:flex;flex-direction:column;gap:5px">';
+    order.forEach(function(v){
+      var same = v === S.version;
+      html += '<div>' + (same ? '<span class="ok">' : '<span class="bad">') +
+        '<b>' + esc(v) + '</b></span> — ' + esc(byVersion[v].join(', ')) + '</div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div style="margin-top:10px;color:var(--muted)">' +
+    '«Поднять версию везде» поставит всем файлам новый номер и поднимет версию сборки.</div>';
+
+  box.innerHTML = html;
+  $('btnBumpAll').classList.remove('hidden');
+}
+
+function renderJsRows(){
+  var box = $('jsRows');
+  var names = Object.keys(S.js);
+
+  if (!names.length) {
+    box.innerHTML = '<p class="hint">Файл не привязан — версию обложек придётся менять вручную.</p>';
+    $('btnDownloadJs').classList.add('hidden');
+    $('btnBumpThumb').classList.add('hidden');
+    return;
+  }
+
+  box.innerHTML = names.map(function(name){
+    var cur = detectThumb(S.js[name].text) || '?';
+    return '<div class="row" style="grid-template-columns:1fr auto">' +
+      '<div class="row-main">' +
+        '<div class="row-title">' + esc(name) + '</div>' +
+        '<div class="row-desc">THUMB_VERSION: <b>' + esc(cur) + '</b> · от версии сборки не зависит</div>' +
+      '</div>' +
+      '<div class="row-acts"><button class="btn btn-sm btn-danger" data-jdel="' +
+        esc(name) + '">Убрать</button></div>' +
+    '</div>';
+  }).join('');
+
+  $('btnDownloadJs').classList.remove('hidden');
+  $('btnBumpThumb').classList.remove('hidden');
+}
+
+function renderCatsTab(){
+  if (!$('catRows')) return;
+
+  var notes = [];
+  notes.push(Object.keys(S.js).length
+    ? '<span class="ok">✓ penuel.js привязан — названия синхронизируются</span>'
+    : '<span class="bad">penuel.js не привязан — названия в нём не обновятся</span>');
+  notes.push(S.html['portfolio.html']
+    ? '<span class="ok">✓ portfolio.html привязан — кнопки фильтров обновятся</span>'
+    : '<span class="bad">portfolio.html не привязан — кнопки фильтров не обновятся</span>');
+
+  $('catsStatus').innerHTML =
+    '<h3>Файлы</h3><div>' + notes.join('<br>') + '</div>' +
+    '<div style="margin-top:8px;color:var(--muted)">' +
+      'Ключи категорий всегда пишутся в videos.js. Без остальных файлов ' +
+      'категория появится в данных, но не на странице.</div>';
+
+  $('catRows').innerHTML = CATS.map(function(c, i){
+    var key = c[0];
+    var used = catUsage(key);
+    return '<div class="row" draggable="true" style="grid-template-columns:26px 1fr auto;cursor:grab" ' +
+        'data-cat="' + esc(key) + '">' +
+      '<span style="color:var(--muted);font-size:.75rem;text-align:right">' + (i + 1) + '</span>' +
+      '<div class="row-main">' +
+        '<div class="row-title">' + esc(c[1]) + '</div>' +
+        '<div class="row-desc">ключ: <code>' + esc(key) + '</code> · роликов: ' + used + '</div>' +
+      '</div>' +
+      '<div class="row-acts">' +
+        '<button class="btn btn-sm" data-cact="ren">Переименовать</button>' +
+        '<button class="btn btn-sm btn-danger" data-cact="del">Удалить</button>' +
+      '</div>' +
+    '</div>';
+  }).join('') || '<p class="hint">Категорий нет.</p>';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Скачивание
+   ═══════════════════════════════════════════════════════════════ */
+
+function download(name, text, type){
+  var blob = new Blob([text], { type: type });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){
+    URL.revokeObjectURL(a.href);
+    a.remove();
+  }, 900);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Загрузка файлов
+   ═══════════════════════════════════════════════════════════════ */
+
+$('drop').addEventListener('click', function(){ $('file').click(); });
+
+$('file').addEventListener('change', function(){
+  var f = $('file').files[0];
+  if (!f) return;
+  var r = new FileReader();
+  r.onload = function(){ loadText(String(r.result)); };
+  r.readAsText(f, 'utf-8');
+  $('file').value = '';
+});
+
+['dragenter', 'dragover'].forEach(function(ev){
+  $('drop').addEventListener(ev, function(e){
+    e.preventDefault();
+    $('drop').classList.add('over');
+  });
+});
+
+['dragleave', 'drop'].forEach(function(ev){
+  $('drop').addEventListener(ev, function(e){
+    e.preventDefault();
+    $('drop').classList.remove('over');
+  });
+});
+
+$('drop').addEventListener('drop', function(e){
+  var f = e.dataTransfer.files[0];
+  if (!f) return;
+  var r = new FileReader();
+  r.onload = function(){ loadText(String(r.result)); };
+  r.readAsText(f, 'utf-8');
+});
+
+$('btnReload').addEventListener('click', function(){
+  if (anyPending() && !confirm('Не выгружено: ' + pendingList().join(', ') +
+      '. Правки будут потеряны. Продолжить?')) return;
+  $('app').classList.add('hidden');
+  $('loader').classList.remove('hidden');
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   Вкладки
+   ═══════════════════════════════════════════════════════════════ */
+
+Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t){
+  t.addEventListener('click', function(){
+    Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(x){
+      x.classList.remove('on');
+    });
+    t.classList.add('on');
+    ['list', 'order', 'cats', 'export'].forEach(function(n){
+      $('tab-' + n).classList.add('hidden');
+    });
+    $('tab-' + t.dataset.tab).classList.remove('hidden');
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   Фильтр по категориям (вкладка «Ролики»)
+   ═══════════════════════════════════════════════════════════════ */
+
+$('cats').addEventListener('click', function(e){
+  var b = e.target.closest('[data-cat]');
+  if (!b) return;
+  S.activeCat = b.dataset.cat;
+  renderFilter();
+  renderRows();
+});
+
+$('orderCats').addEventListener('click', function(e){
+  var b = e.target.closest('[data-ocat]');
+  if (!b) return;
+  S.activeOrderCat = b.dataset.ocat;
+  renderCats();
+  renderSort();
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   Модальное окно ролика
+   ═══════════════════════════════════════════════════════════════ */
+
+function renderCatChecks(){
+  $('fCats').innerHTML = CATS.map(function(c){
+    var on = !!S.pendingCats[c[0]];
+    return '<label class="cbox' + (on ? ' on' : '') + '">' +
+      '<input type="checkbox" value="' + esc(c[0]) + '"' + (on ? ' checked' : '') + '>' +
+      '<span>' + esc(c[1]) + '</span></label>';
+  }).join('');
+}
+
+$('fCats').addEventListener('change', function(e){
+  var cb = e.target;
+  if (cb.type !== 'checkbox') return;
+  if (cb.checked) S.pendingCats[cb.value] = true;
+  else delete S.pendingCats[cb.value];
+  cb.closest('.cbox').classList.toggle('on', cb.checked);
+});
+
+function openModal(id){
+  S.editing = id;
+  var v = null;
+
+  if (id) {
+    S.videos.forEach(function(x){ if (x.id === id) v = x; });
+  }
+
+  S.pendingCats = {};
+  if (v) inCats(v).forEach(function(c){ S.pendingCats[c] = true; });
+
+  $('mTitle').textContent = v ? 'Изменить ролик' : 'Новый ролик';
+  $('fId').value = v ? v.id : '';
+  $('fTitle').value = v ? v.title : '';
+  $('fDesc').value = v ? v.desc : '';
+  $('mErr').classList.add('hidden');
+  renderCatChecks();
+
+  $('modal').classList.remove('hidden');
+  $('fId').focus();
+}
+
+function closeModal(){
+  $('modal').classList.add('hidden');
+  S.editing = null;
+}
+
+$('btnAdd').addEventListener('click', function(){ openModal(null); });
+$('mCancel').addEventListener('click', closeModal);
+
+$('modal').addEventListener('click', function(e){
+  if (e.target === $('modal')) closeModal();
+});
+
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape' && !$('modal').classList.contains('hidden')) closeModal();
+});
+
+/* Достать ID из ссылки или из чистого ID */
+function extractId(raw){
+  var s = String(raw || '').trim();
+  if (!s) return '';
+  var m = s.match(/(?:v=|youtu\.be\/|\/embed\/|\/shorts\/)([A-Za-z0-9_-]{11})/);
+  if (m) return m[1];
+  if (/^[A-Za-z0-9_-]{11}$/.test(s)) return s;
+  return s;
+}
+
+$('mSave').addEventListener('click', function(){
+  var err = $('mErr');
+  err.classList.add('hidden');
+
+  var id = extractId($('fId').value);
+  var title = $('fTitle').value.trim();
+  var desc = $('fDesc').value.trim();
+  var cats = Object.keys(S.pendingCats);
+
+  if (!id) {
+    err.textContent = 'Укажите ID ролика на YouTube или полную ссылку.';
+    err.classList.remove('hidden');
+    return;
+  }
+  if (!title) {
+    err.textContent = 'Впишите название ролика.';
+    err.classList.remove('hidden');
+    return;
+  }
+  if (!cats.length) {
+    err.textContent = 'Выберите хотя бы одну категорию.';
+    err.classList.remove('hidden');
+    return;
+  }
+
+  var dup = null;
+  S.videos.forEach(function(v){
+    if (v.id === id && v.id !== S.editing) dup = v;
+  });
+  if (dup) {
+    err.textContent = 'Ролик с таким ID уже есть: «' + dup.title + '».';
+    err.classList.remove('hidden');
+    return;
+  }
+
+  var cat = cats.join(' ');
+
+  if (S.editing) {
+    S.videos.forEach(function(v){
+      if (v.id === S.editing) { v.title = title; v.desc = desc; v.cat = cat; }
+    });
+  } else {
+    S.videos.push({ id: id, title: title, desc: desc, cat: cat });
+  }
+
+  syncOrderFor(id, cats, !S.editing);
+  markData();
+  rebuildCats();
+  closeModal();
+  renderAll();
+  toast(S.editing ? 'Ролик обновлён' : 'Ролик добавлен');
+});
+
+/* Привести списки порядка в соответствие с набором категорий */
+function syncOrderFor(id, cats, isNew){
+  var keys = ['all'].concat(CATS.map(function(c){ return c[0]; }));
+
+  keys.forEach(function(k){
+    if (!S.order[k]) S.order[k] = [];
+    var has = S.order[k].indexOf(id) !== -1;
+    var want = (k === 'all') || cats.indexOf(k) !== -1;
+
+    if (want && !has) {
+      S.order[k].push(id);
+    } else if (!want && has) {
+      S.order[k] = S.order[k].filter(function(x){ return x !== id; });
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Правка и удаление ролика
+   ═══════════════════════════════════════════════════════════════ */
+
+$('rows').addEventListener('click', function(e){
+  var b = e.target.closest('[data-act]');
+  if (!b) return;
+
+  var id = b.dataset.id;
+
+  if (b.dataset.act === 'edit') {
+    openModal(id);
+    return;
+  }
+
+  var v = null;
+  S.videos.forEach(function(x){ if (x.id === id) v = x; });
+
+  if (!confirm('Удалить ролик «' + (v ? v.title : id) + '»?\n\n' +
+      'Он исчезнет из портфолио и из всех списков порядка.')) return;
+
+  S.videos = S.videos.filter(function(x){ return x.id !== id; });
+
+  Object.keys(S.order).forEach(function(k){
+    S.order[k] = S.order[k].filter(function(x){ return x !== id; });
+  });
+
+  markData();
+  rebuildCats();
+  renderAll();
+  toast('Ролик удалён');
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   Порядок: перетаскивание и поле позиции
+   ═══════════════════════════════════════════════════════════════ */
+
+(function initSort(){
+  var list = $('sortlist');
+  var dragEl = null;
+
+  list.addEventListener('dragstart', function(e){
+    var row = e.target.closest('.sitem');
+    if (!row) return;
+    dragEl = row;
+    row.classList.add('drag');
+    e.dataTransfer.effectAllowed = 'move';
+    try { e.dataTransfer.setData('text/plain', row.dataset.id); } catch (err) {}
+  });
+
+  list.addEventListener('dragend', function(){
+    dragEl = null;
+    Array.prototype.forEach.call(list.querySelectorAll('.drag, .over'), function(x){
+      x.classList.remove('drag');
+      x.classList.remove('over');
+    });
+  });
+
+  list.addEventListener('dragover', function(e){
+    e.preventDefault();
+    var row = e.target.closest('.sitem');
+    if (!row || row === dragEl) return;
+    Array.prototype.forEach.call(list.querySelectorAll('.over'), function(x){
+      x.classList.remove('over');
+    });
+    row.classList.add('over');
+  });
+
+  list.addEventListener('drop', function(e){
+    e.preventDefault();
+    var target = e.target.closest('.sitem');
+    if (!target || !dragEl || target === dragEl) return;
+
+    var ids = S.order[S.activeOrderCat].slice();
+    var from = ids.indexOf(dragEl.dataset.id);
+    var to = ids.indexOf(target.dataset.id);
+    if (from === -1 || to === -1) return;
+
+    ids.splice(from, 1);
+    ids.splice(to, 0, dragEl.dataset.id);
+    S.order[S.activeOrderCat] = ids;
+
+    markData();
+    renderFilter();
+    renderCats();
+    renderSort();
+    toast('Позиция ' + (to + 1));
+  });
+
+  /* Точная позиция: вписали номер — ролик встал на него. */
+  list.addEventListener('change', function(e){
+    var inp = e.target;
+    if (!inp.classList || !inp.classList.contains('pos')) return;
+
+    var id = inp.closest('.sitem').dataset.id;
+    var ids = S.order[S.activeOrderCat].slice();
+    var from = ids.indexOf(id);
+    var to = parseInt(inp.value, 10) - 1;
+
+    if (isNaN(to) || to < 0 || to >= ids.length) {
+      toast('Позиция от 1 до ' + ids.length);
+      renderSort();
+      return;
+    }
+    if (to === from) return;
+
+    ids.splice(from, 1);
+    ids.splice(to, 0, id);
+    S.order[S.activeOrderCat] = ids;
+
+    markData();
+    renderFilter();
+    renderCats();
+    renderSort();
+    toast('Перенесено на позицию ' + (to + 1));
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   Категории: добавление, переименование, удаление, порядок
+   ═══════════════════════════════════════════════════════════════ */
+
+$('btnAddCat').addEventListener('click', function(){
+  var err = $('catErr');
+  err.classList.add('hidden');
+
+  var name = $('newCatLabel').value.trim();
+  if (!name) {
+    err.textContent = 'Впишите название категории.';
+    err.classList.remove('hidden');
+    return;
+  }
+
+  var key = slugify(name) || ('cat-' + Date.now().toString(36));
+
+  if (key === 'all') {
+    err.textContent = 'Ключ «all» занят — это общий список. Выберите другое название.';
+    err.classList.remove('hidden');
+    return;
+  }
+
+  if (catExists(key)) {
+    err.textContent = 'Категория с ключом «' + key + '» уже есть.';
+    err.classList.remove('hidden');
+    return;
+  }
+
+  S.order[key] = [];
+  S.catLabels[key] = name;
+  markCats();
+
+  rebuildCats();
+  $('newCatLabel').value = '';
+  renderAll();
+  toast('Категория «' + name + '» добавлена');
+});
+
+$('catRows').addEventListener('click', function(e){
+  var b = e.target.closest('[data-cact]');
+  if (!b) return;
+  var key = b.closest('[data-cat]').dataset.cat;
+  if (b.dataset.cact === 'ren') renameCategory(key);
+  else removeCategory(key);
+});
+
+function renameCategory(key){
+  var cur = label(key);
+  var next = prompt('Новое название категории «' + cur + '»:', cur);
+  if (next === null) return;
+
+  next = next.trim();
+  if (!next) { alert('Название не может быть пустым.'); return; }
+  if (next === cur) return;
+
+  S.catLabels[key] = next;
+  markCats();
+  rebuildCats();
+  renderAll();
+  toast('Переименовано: ' + next);
+}
+
+function removeCategory(key){
+  var used = catUsage(key);
+  var msg = 'Удалить категорию «' + label(key) + '»?';
+
+  if (used) {
+    msg += '\n\nВ ней ' + used + ' ролик(ов). Они останутся в портфолио, ' +
+           'но будут убраны из этой категории и из её списка порядка.';
+  }
+
+  if (!confirm(msg)) return;
+
+  S.videos.forEach(function(v){
+    var cats = inCats(v);
+    if (cats.indexOf(key) === -1) return;
+    v.cat = cats.filter(function(c){ return c !== key; }).join(' ');
+  });
+
+  delete S.order[key];
+  delete S.catLabels[key];
+
+  if (S.activeCat === key) S.activeCat = 'all';
+  if (S.activeOrderCat === key) S.activeOrderCat = 'all';
+
+  markCats();
+  rebuildCats();
+  renderAll();
+  toast('Категория удалена');
+}
+
+/* Перетаскивание категорий меняет порядок кнопок на сайте */
+(function initCatDrag(){
+  var box = $('catRows');
+  var dragKey = null;
+
+  box.addEventListener('dragstart', function(e){
+    var row = e.target.closest('[data-cat]');
+    if (!row) return;
+    dragKey = row.dataset.cat;
+    row.classList.add('drag');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+
+  box.addEventListener('dragend', function(){
+    dragKey = null;
+    Array.prototype.forEach.call(box.querySelectorAll('.drag, .over'), function(x){
+      x.classList.remove('drag');
+      x.classList.remove('over');
+    });
+  });
+
+  box.addEventListener('dragover', function(e){
+    e.preventDefault();
+    var row = e.target.closest('[data-cat]');
+    if (!row || row.dataset.cat === dragKey) return;
+    Array.prototype.forEach.call(box.querySelectorAll('.over'), function(x){
+      x.classList.remove('over');
+    });
+    row.classList.add('over');
+  });
+
+  box.addEventListener('drop', function(e){
+    e.preventDefault();
+    var row = e.target.closest('[data-cat]');
+    if (!row || !dragKey || row.dataset.cat === dragKey) return;
+
+    var keys = CATS.map(function(c){ return c[0]; });
+    var from = keys.indexOf(dragKey);
+    var to = keys.indexOf(row.dataset.cat);
+    if (from === -1 || to === -1) return;
+
+    var moved = keys.splice(from, 1)[0];
+    keys.splice(to, 0, moved);
+
+    var next = { all: S.order.all };
+    keys.forEach(function(k){ next[k] = S.order[k]; });
+    S.order = next;
+
+    markCats();
+    rebuildCats();
+    renderAll();
+    toast('Порядок категорий обновлён — позиция ' + (to + 1));
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   Версия сборки
+   ═══════════════════════════════════════════════════════════════ */
+
+$('btnBump').addEventListener('click', function(){
+  S.version = nextBuild(S.version);
+  $('hdrInfo').textContent = 'версия ' + S.version;
+  markVersion();
+  renderReport();
+  renderHtmlRows();
+  if (window._builtText) $('btnBuild').click();
+  toast('Версия: ' + S.version);
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   Сборка videos.js
+   ═══════════════════════════════════════════════════════════════ */
+
+$('btnBuild').addEventListener('click', function(){
+  var err = $('buildErr');
+  var problems = validate();
+
+  if (problems.length) {
+    err.innerHTML = '<b>Файл не собран.</b> Сначала исправьте на вкладке «Ролики»:<br>' +
+      problems.slice(0, 5).map(esc).join('<br>');
+    err.classList.remove('hidden');
+    return;
+  }
+
+  err.classList.add('hidden');
+  window._builtText = buildFile();
+  toast('Собрано, ' + S.videos.length + ' роликов');
+});
+
+$('btnDownload').addEventListener('click', function(){
+  if (!window._builtText) {
+    var problems = validate();
+    if (problems.length) {
+      var err = $('buildErr');
+      err.innerHTML = '<b>Файл не собран.</b> Сначала исправьте данные.';
+      err.classList.remove('hidden');
+      return;
+    }
+    window._builtText = buildFile();
+  }
+
+  download('videos.js', window._builtText, 'text/javascript;charset=utf-8');
+  S.pending.videos = false;
+  renderReport();
+  toast('videos.js скачан');
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   HTML-файлы
+   ═══════════════════════════════════════════════════════════════ */
+
+$('btnAddHtml').addEventListener('click', function(){ $('htmlFile').click(); });
+
+$('htmlFile').addEventListener('change', function(){
+  var files = Array.prototype.slice.call($('htmlFile').files || []);
+  if (!files.length) return;
+
+  var left = files.length;
+  var err = $('htmlErr');
+  err.classList.add('hidden');
+
+  files.forEach(function(f){
+    var r = new FileReader();
+    r.onload = function(){
+      var text = String(r.result);
+      if (!detectVersion(text)) {
+        err.textContent = 'В «' + f.name + '» не нашлось ни одной ссылки ?v= — проверьте, тот ли файл.';
+        err.classList.remove('hidden');
+      } else {
+        S.html[f.name] = { text: text };
+      }
+      if (--left === 0) {
+        adoptHtmlOrder();
+        renderAll();
+      }
+    };
+    r.onerror = function(){ if (--left === 0) renderAll(); };
+    r.readAsText(f, 'utf-8');
+  });
+
+  $('htmlFile').value = '';
+});
+
+/* Порядок категорий берём из кнопок на странице, чтобы привязка файла
+   не переставила кнопки сама по себе. */
+function readFilterOrder(html){
+  var m = html.match(/<div class="filters"[\s\S]*?<\/div>/);
+  if (!m) return null;
+
+  var out = [];
+  var re = /data-filter="([a-z0-9-]+)"/g;
+  var hit;
+  while ((hit = re.exec(m[0])) !== null) {
+    if (hit[1] !== 'all') out.push(hit[1]);
+  }
+  return out.length ? out : null;
+}
+
+function adoptHtmlOrder(){
+  var f = S.html['portfolio.html'];
+  if (!f) return;
+
+  var keys = readFilterOrder(f.text);
+  if (!keys) return;
+
+  var have = Object.keys(S.order).filter(function(k){ return k !== 'all'; });
+  if (!have.length) return;
+
+  var same = have.length === keys.length &&
+             have.every(function(k, i){ return k === keys[i]; });
+  if (same) return;
+
+  var ordered = keys.filter(function(k){ return S.order[k]; });
+  have.forEach(function(k){ if (ordered.indexOf(k) === -1) ordered.push(k); });
+
+  var next = { all: S.order.all };
+  ordered.forEach(function(k){ next[k] = S.order[k]; });
+  S.order = next;
+
+  rebuildCats();
+}
+
+$('htmlRows').addEventListener('click', function(e){
+  var b = e.target.closest('[data-hdel]');
+  if (!b) return;
+  delete S.html[b.dataset.hdel];
+  renderHtmlRows();
+  renderCatsTab();
+});
+
+/* ── одна кнопка на все файлы ── */
+$('btnBumpAll').addEventListener('click', function(){
+  var names = Object.keys(S.html);
+  if (!names.length) return;
+
+  var next = nextBuild(S.version);
+  S.version = next;
+  $('hdrInfo').textContent = 'версия ' + next;
+
+  names.forEach(function(n){
+    S.html[n].text = rewriteHtml(S.html[n].text, next).html;
+  });
+
+  if (window._builtText) { $('btnBuild').click(); }
+
+  markVersion();
+  renderReport();
+  renderHtmlRows();
+  toast('Все файлы на версии ' + next + ' — скачайте заново');
+});
+
+$('btnDownloadHtml').addEventListener('click', function(){
+  var names = Object.keys(S.html);
+  if (!names.length) return;
+
+  var err = $('htmlErr');
+  err.classList.add('hidden');
+
+  var problems = validate();
+  if (problems.length) {
+    err.innerHTML = '<b>Сначала исправьте данные.</b> ' + esc(problems[0]);
+    err.classList.remove('hidden');
+    return;
+  }
+
+  var ok = 0;
+
+  names.forEach(function(name){
+    var res = rewriteHtml(S.html[name].text, S.version);
+
+    if (!res.count) {
+      err.textContent = 'В файле «' + name + '» не нашлось ни одной ссылки ?v=.';
+      err.classList.remove('hidden');
+      return;
+    }
+
+    var out = res.html;
+
+    if (name === 'portfolio.html') {
+      var f = writeFilterButtons(out);
+      if (!f.ok) {
+        err.textContent = 'В portfolio.html не найден блок фильтров <div class="filters">.';
+        err.classList.remove('hidden');
+        return;
+      }
+      out = f.html;
+    }
+
+    download(name, out, 'text/html;charset=utf-8');
+    ok++;
+  });
+
+  if (ok) {
+    S.pending.html = false;
+    renderReport();
+    toast('HTML обновлён до ' + S.version + ' — ' + ok + ' файлов');
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   penuel.js: названия категорий и версия обложек
+   ═══════════════════════════════════════════════════════════════ */
+
+$('btnAddJs').addEventListener('click', function(){ $('jsFile').click(); });
+
+$('jsFile').addEventListener('change', function(){
+  var files = Array.prototype.slice.call($('jsFile').files || []);
+  if (!files.length) return;
+
+  var left = files.length;
+  var err = $('jsErr');
+  err.classList.add('hidden');
+
+  files.forEach(function(f){
+    var r = new FileReader();
+    r.onload = function(){
+      var text = String(r.result);
+
+      if (text.indexOf('THUMB_VERSION') === -1) {
+        err.textContent = 'В «' + f.name + '» нет строки THUMB_VERSION — это не тот файл.';
+        err.classList.remove('hidden');
+      } else {
+        S.js[f.name] = { text: text };
+
+        var labels = readCatLabels(text);
+        if (labels) {
+          S.catLabels = labels;
+          rebuildCats();
+        }
+      }
+      if (--left === 0) { renderJsRows(); renderAll(); }
+    };
+    r.onerror = function(){ if (--left === 0) renderJsRows(); };
+    r.readAsText(f, 'utf-8');
+  });
+
+  $('jsFile').value = '';
+});
+
+$('jsRows').addEventListener('click', function(e){
+  var b = e.target.closest('[data-jdel]');
+  if (!b) return;
+  delete S.js[b.dataset.jdel];
+  renderJsRows();
+  renderCatsTab();
+});
+
+$('btnBumpThumb').addEventListener('click', function(){
+  var names = Object.keys(S.js);
+  if (!names.length) return;
+
+  var err = $('jsErr');
+  err.classList.add('hidden');
+  var last = null;
+
+  for (var i = 0; i < names.length; i++) {
+    var name = names[i];
+    var cur = detectThumb(S.js[name].text);
+    var next = nextBuild(cur);
+
+    if (!next) {
+      err.textContent = 'Не удалось разобрать версию «' + cur + '» в файле ' + name + '.';
+      err.classList.remove('hidden');
+      return;
+    }
+
+    S.js[name].text = setThumb(S.js[name].text, next);
+    last = next;
+  }
+
+  markThumb();
+  renderReport();
+  renderJsRows();
+  toast('Версия обложек: ' + last + ' — скачайте penuel.js');
+});
+
+$('btnDownloadJs').addEventListener('click', function(){
+  var names = Object.keys(S.js);
+  if (!names.length) return;
+
+  var err = $('jsErr');
+  err.classList.add('hidden');
+  var ok = 0;
+  var order = CATS.map(function(c){ return c[0]; });
+
+  names.forEach(function(name){
+    var text = S.js[name].text;
+
+    if (text.indexOf('THUMB_VERSION') === -1) {
+      err.textContent = 'В файле ' + name + ' не нашлось строки THUMB_VERSION.';
+      err.classList.remove('hidden');
+      return;
+    }
+
+    var withLabels = writeCatLabels(text, order);
+    if (!withLabels) {
+      err.textContent = 'В файле ' + name + ' не найден блок CAT_LABELS.';
+      err.classList.remove('hidden');
+      return;
+    }
+
+    download(name, withLabels, 'text/javascript;charset=utf-8');
+    ok++;
+  });
+
+  if (ok) {
+    S.pending.js = false;
+    renderReport();
+    toast('penuel.js скачан');
+  }
+});
+</script>
+</body>
+</html>

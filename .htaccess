@@ -1,0 +1,89 @@
+# PENUELVISION STUDIOS — Apache configuration
+# ============================================
+#
+# Serves the contact form correctly by keeping every visitor on HTTPS.
+# The mail endpoint only accepts https:// origins, so a page opened on
+# http:// would be rejected by CORS and the form would report a
+# misleading "could not reach the server" error.
+
+# ------------------------------------------------------------
+# 1. Force HTTPS
+# ------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Behind a proxy or load balancer the connection looks like HTTP even
+  # when the visitor is on HTTPS. Trust the forwarded header first.
+  RewriteCond %{HTTP:X-Forwarded-Proto} =http [OR]
+  RewriteCond %{HTTP:X-Forwarded-Proto} ^$
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP_HOST} !^localhost [NC]
+  RewriteCond %{HTTP_HOST} !^127\.0\.0\.1 [NC]
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# ------------------------------------------------------------
+# 2. Sensible defaults
+# ------------------------------------------------------------
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+ <FilesMatch "\.(woff2|woff|ttf|otf|eot)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+# ------------------------------------------------------------
+# 3. Caching
+#    CSS and JS carry a ?v= version, so they can be cached hard.
+#    HTML must revalidate, otherwise edits take hours to appear.
+# ------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 6 months"
+  ExpiresByType image/png "access plus 6 months"
+  ExpiresByType image/webp "access plus 6 months"
+  ExpiresByType video/mp4 "access plus 6 months"
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType font/woff2                     "access plus 1 year"
+  ExpiresByType font/woff                      "access plus 1 year"
+  ExpiresByType font/ttf                       "access plus 1 year"
+  ExpiresByType font/otf                       "access plus 1 year"
+  ExpiresByType application/font-woff          "access plus 1 year"
+  ExpiresByType application/font-woff2         "access plus 1 year"
+  ExpiresByType application/x-font-ttf         "access plus 1 year"
+  ExpiresByType application/vnd.ms-fontobject  "access plus 1 year"
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType font/woff2  .woff2
+  AddType font/woff   .woff
+  AddType font/ttf    .ttf
+  AddType font/otf    .otf
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ------------------------------------------------------------
+# 4. Compression
+# ------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript text/plain
+</IfModule>
+
+# ------------------------------------------------------------
+# 5. Do not list directories
+# ------------------------------------------------------------
+Options -Indexes
+
+# ------------------------------------------------------------
+# 6. Friendly error page
+# ------------------------------------------------------------
+ErrorDocument 404 /index.html
